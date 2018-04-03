@@ -544,7 +544,7 @@ export class Shogi {
     }
 
     // 王手かどうかチェックする
-    public isCheck(): boolean {
+    public isCheck(color: Color = this.turn): boolean {
         // 手番側でない駒を移動させる手を生成し、手番側の玉に利きがあれば王手
         let kingPos;
         for (let i = 1; i <= 9; i++) {
@@ -553,7 +553,7 @@ export class Shogi {
                 if (piece == null) {
                     continue;
                 }
-                if (piece.color === this.turn && piece.kind == "OU") {
+                if (piece.color === color && piece.kind == "OU") {
                     kingPos = {x: i, y: j};
                     break;
                 }
@@ -570,7 +570,7 @@ export class Shogi {
                 if (piece == null) {
                     continue;
                 }
-                if (piece.color !== this.turn) {
+                if (piece.color !== color) {
                     let moves = this.getMovesFrom(i, j);
                     for (let k = 0; k < moves.length; k++) {
                         let move = moves[k];

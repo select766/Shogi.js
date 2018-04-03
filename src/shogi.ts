@@ -543,6 +543,48 @@ export class Shogi {
         return ret;
     }
 
+    // 王手かどうかチェックする
+    public isCheck(): boolean {
+        // 手番側でない駒を移動させる手を生成し、手番側の玉に利きがあれば王手
+        let kingPos;
+        for (let i = 1; i <= 9; i++) {
+            for (let j = 1; j <= 9; j++) {
+                const piece = this.get(i, j);
+                if (piece == null) {
+                    continue;
+                }
+                if (piece.color === this.turn && piece.kind == "OU") {
+                    kingPos = {x: i, y: j};
+                    break;
+                }
+            }
+
+            if (kingPos) {
+                break;
+            }
+        }
+
+        for (let i = 1; i <= 9; i++) {
+            for (let j = 1; j <= 9; j++) {
+                const piece = this.get(i, j);
+                if (piece == null) {
+                    continue;
+                }
+                if (piece.color !== this.turn) {
+                    let moves = this.getMovesFrom(i, j);
+                    for (let k = 0; k < moves.length; k++) {
+                        let move = moves[k];
+                        if (move.to.x === kingPos.x && move.to.y === kingPos.y) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     // colorが打てる動きを全て得る
     public getDropsBy(color: Color): IMove[] {
         const ret = [];
